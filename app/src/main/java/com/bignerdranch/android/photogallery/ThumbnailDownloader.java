@@ -70,8 +70,7 @@ public class ThumbnailDownloader<T> extends HandlerThread {
             mRequestMap.put(target,url);
         }else {
             mRequestMap.put(target, url);
-            //当传入其他消息字段给它时，该方法会自动设置目标给Handler对象（obtainMessage）
-            //sendToTarget()方法将Message发送给它的Handler，然后Handler会将这个Message放置在Looper消息队列的尾部。
+
             mRequestHandler.obtainMessage(MESSAGE_DOWNLOAD,target).sendToTarget();
         }
     }
