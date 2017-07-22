@@ -10,14 +10,29 @@ import android.preference.PreferenceManager;
 public class QueryPreferences {
 
     private static final String PREF_SEARCH_QUERY = "searchQuery"; //用来存放KEy
+    private static final String PREF_LAST_RESULT_ID = "lastResultId";
 
-    public static String getStoredQuery(Context context){ //查询
-        return PreferenceManager.getDefaultSharedPreferences(context).getString(PREF_SEARCH_QUERY,null);
+
+    public static String getStoredQuery(Context context) { //查询
+        return PreferenceManager.getDefaultSharedPreferences(context).getString(PREF_SEARCH_QUERY, null);
     }
 
-    public static void setStoredQuery(Context context, String query){
+    public static void setStoredQuery(Context context, String query) {
         PreferenceManager.getDefaultSharedPreferences(context).edit()
-                .putString(PREF_SEARCH_QUERY,query)
+                .putString(PREF_SEARCH_QUERY, query)
                 .apply();//异步写入数据 apply()方法首先在内存中执行数据变更，然后在后台线程上真正的把数据写入文件。
     }
+
+
+    public static String getLastResultId(Context context){
+        return PreferenceManager.getDefaultSharedPreferences(context).getString(PREF_LAST_RESULT_ID,null);
+    }
+    //存储最近一次获取图片的ID
+    public static void setLastResultId(Context context, String lastResultId){
+        PreferenceManager.getDefaultSharedPreferences(context)
+                .edit()
+                .putString(PREF_LAST_RESULT_ID,lastResultId)
+                .apply();
+    }
+
 }

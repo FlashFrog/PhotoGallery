@@ -53,6 +53,7 @@ public class PhotoGalleryFragment extends Fragment {
         setHasOptionsMenu(true); //让fragment接受菜单回调方法。
         updateItems();
 
+
         Handler responseHandler = new Handler(); //这个Handler会默认与主线程的Looper相关联（在onCreate()方法创建）
         mThumbnailDownloader = new ThumbnailDownloader<>(responseHandler);
         mThumbnailDownloader.setThumbnailDownloadListener(new ThumbnailDownloader.ThumbnailDownloadListener<PhotoHolder>() {
@@ -102,7 +103,6 @@ public class PhotoGalleryFragment extends Fragment {
         mSearchView = (SearchView)searchItem.getActionView(); //取出SearchView对象。
 
 
-
         //设置监听器
         mSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
@@ -120,6 +120,13 @@ public class PhotoGalleryFragment extends Fragment {
                 return false;
             }
          });
+
+        MenuItem toggleItem = menu.findItem(R.id.menu_item_toggle_polling);
+        if (PollService.isServiceAlarmOn(getActivity())) {
+            toggleItem.setTitle(R.string.stop_polling);
+        } else {
+            toggleItem.setTitle(R.string.start_polling);
+        }
         mSearchView.setOnSearchClickListener(new View.OnClickListener() { //设置点击按钮时，显示之前搜索过的值
             @Override
             public void onClick(View v) {
@@ -127,6 +134,8 @@ public class PhotoGalleryFragment extends Fragment {
                 mSearchView.setQuery(query,false);
             }
         });
+
+
     }
 
     @Override
@@ -135,6 +144,11 @@ public class PhotoGalleryFragment extends Fragment {
             case R.id.menu_item_clear:
                 QueryPreferences.setStoredQuery(getActivity(),null);
                 updateItems();
+                return true;
+            case R.id.menu_item_toggle_polling:
+                boolean shouldStartAlarm  = !PollService.isServiceAlarmOn(getActivity());
+                PollService.setServiceAlarm(getActivity(),shouldStartAlarm);
+                getActivity().invalidateOptionsMenu(); //刷新菜单项
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
