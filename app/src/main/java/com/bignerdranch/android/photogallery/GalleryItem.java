@@ -1,5 +1,7 @@
 package com.bignerdranch.android.photogallery;
 
+import android.net.Uri;
+
 /**
  * Created by Leo on 2017/7/19.
  */
@@ -12,15 +14,15 @@ public class GalleryItem {
 
     private String mUrl;
 
-//    private String mOwner;
+    private String mOwner;
 
-//    public String getOwner() {
-//        return mOwner;
-//    }
-//
-//    public void setOwner(String owner) {
-//        mOwner = owner;
-//    }
+    public String getOwner() {
+        return mOwner;
+    }
+
+    public void setOwner(String owner) {
+        mOwner = owner;
+    }
 
     @Override
     public String toString(){
@@ -51,12 +53,12 @@ public class GalleryItem {
         mUrl = url;
     }
 
-//    //产生图片URL的方法
-//    public Uri getPhotoPageUri() {
-//        return Uri.parse("http://www.flickr.com/photos/")
-//                .buildUpon()
-//                .appendPath(mOwner)
-//                .appendPath(mId)
-//                .build();
-//    }
+    //产生图片URL的方法
+    public Uri getPhotoPageUri() {
+        return Uri.parse("http://www.flickr.com/photos/")
+                .buildUpon()
+                .appendPath(mOwner)
+                .appendPath(mId)
+                .build();
+    }
 }

@@ -38,13 +38,15 @@ public class FlickrFetcher {
             .build();
 
     //通过指定URL获取原始数据，并返回一个字节流数组。
-    public byte[] getUrlBytes(String urlSpec)throws IOException{
+    public byte[] getUrlBytes(String urlSpec)throws IOException {
 
         //根据传入的字符串参数，创建一个URL对象
         URL url = new URL(urlSpec);
         //通过url.openConnection()方法得到HttpUrlConnection对象。
         HttpURLConnection connection = (HttpURLConnection)url.openConnection();
 
+        connection.setConnectTimeout(10000);
+        Log.d(TAG, "getUrlBytes: "+connection.getResponseCode());
         try{
             ByteArrayOutputStream out = new ByteArrayOutputStream();
            /*
@@ -52,7 +54,7 @@ public class FlickrFetcher {
            *   （如果是POST请求，则调用 getOutputStream() 方法），它才会真正连接到指定的URL地址。
             */
             InputStream in = connection.getInputStream();
-
+            Log.d(TAG, "getUrlBytes: "+connection.getResponseCode());
             //如果连接失败就抛出错误
             if(connection.getResponseCode() != HttpURLConnection.HTTP_OK){
                 throw new IOException(connection.getResponseMessage() + ": with" + urlSpec);
@@ -145,7 +147,7 @@ public class FlickrFetcher {
             }
 
             item.setUrl(photoJsonObject.getString("url_s"));
-//            item.setOwner(photoJsonObject.getString("owner"));
+            item.setOwner(photoJsonObject.getString("owner"));
             items.add(item);
         }
     }
