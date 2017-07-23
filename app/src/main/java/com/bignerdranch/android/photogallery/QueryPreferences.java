@@ -11,6 +11,7 @@ public class QueryPreferences {
 
     private static final String PREF_SEARCH_QUERY = "searchQuery"; //用来存放KEy
     private static final String PREF_LAST_RESULT_ID = "lastResultId";
+    private static final String PREF_IS_ALARM_ON = "isAlarmOn";
 
 
     public static String getStoredQuery(Context context) { //查询
@@ -32,6 +33,21 @@ public class QueryPreferences {
         PreferenceManager.getDefaultSharedPreferences(context)
                 .edit()
                 .putString(PREF_LAST_RESULT_ID,lastResultId)
+                .apply();
+    }
+
+
+    //获取定时器的启停状态
+    public static boolean isAlarmOn(Context context){
+        return PreferenceManager.getDefaultSharedPreferences(context)
+                .getBoolean(PREF_IS_ALARM_ON,false);
+    }
+
+    //设置定时器的启停状态
+    public static void setAlarmOn(Context context, boolean isOn){
+        PreferenceManager.getDefaultSharedPreferences(context)
+                .edit()
+                .putBoolean(PREF_IS_ALARM_ON,isOn)
                 .apply();
     }
 

@@ -12,6 +12,16 @@ public class GalleryItem {
 
     private String mUrl;
 
+//    private String mOwner;
+
+//    public String getOwner() {
+//        return mOwner;
+//    }
+//
+//    public void setOwner(String owner) {
+//        mOwner = owner;
+//    }
+
     @Override
     public String toString(){
         return mCaption;
@@ -40,4 +50,13 @@ public class GalleryItem {
     public void setUrl(String url) {
         mUrl = url;
     }
+
+//    //产生图片URL的方法
+//    public Uri getPhotoPageUri() {
+//        return Uri.parse("http://www.flickr.com/photos/")
+//                .buildUpon()
+//                .appendPath(mOwner)
+//                .appendPath(mId)
+//                .build();
+//    }
 }

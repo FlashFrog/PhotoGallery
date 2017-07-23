@@ -1,5 +1,6 @@
 package com.bignerdranch.android.photogallery;
 
+import android.app.Activity;
 import android.app.AlarmManager;
 import android.app.IntentService;
 import android.app.Notification;
@@ -10,7 +11,6 @@ import android.content.res.Resources;
 import android.net.ConnectivityManager;
 import android.os.SystemClock;
 import android.support.v4.app.NotificationCompat;
-import android.support.v4.app.NotificationManagerCompat;
 import android.util.Log;
 
 import java.util.List;
@@ -23,7 +23,15 @@ public class PollService extends IntentService {
 
     private static final String TAG = "PollService";
 
-    private static final long POLL_INTERVAL =  AlarmManager.INTERVAL_FIFTEEN_MINUTES;
+    private static final long POLL_INTERVAL =  1000 * 10;
+
+    public static final String ACTION_SHOW_NOTIFICATION = "com.bignerdranch.android.photogallery.SHOW_NOTIFICATION";
+
+    public static final String PERM_PRIVATE = "com.bignerdranch.android.photogallery.PRIVATE";
+
+    public static final String REQUEST_CODE = "REQUEST_CODE";
+
+    public static final String NOTIFICATION = "NOTIFICATION";
 
     public static Intent newIntent(Context context){
         return new Intent(context,PollService.class);
@@ -41,6 +49,8 @@ public class PollService extends IntentService {
             alarmManager.cancel(pi);
             pi.cancel();
         }
+
+        QueryPreferences.setAlarmOn(context,isOn); //设置定时器启停状态
     }
 
     //判断定时器的状态
@@ -93,8 +103,9 @@ public class PollService extends IntentService {
                     .setAutoCancel(true)
                     .build();
 
-            NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
-            notificationManager.notify(0,notification);
+
+
+            showBackgroundNotification(0,notification);
         }
         //将第一条结果存入SharedPreferences
         QueryPreferences.setLastResultId(this,resultId);
@@ -107,5 +118,19 @@ public class PollService extends IntentService {
         boolean isNetworkConnected = isNetworkAvailable && cm.getActiveNetworkInfo().isConnected(); //网络是否是完全连接
 
         return isNetworkConnected;
+    }
+
+    private void showBackgroundNotification(int requestCode, Notification notification){
+        Intent i = new Intent(ACTION_SHOW_NOTIFICATION);
+        i.putExtra(REQUEST_CODE,requestCode);
+        i.putExtra(NOTIFICATION,notification);
+        /*
+         * 第三个参数为一个results receiver
+         * 第四：一个支持result receiver运行的Handler
+         * 第五: 结果代码初始值
+         * 第六: 结果数据
+         * 第七: 有序broadcast的结果附加内容
+         */
+        sendOrderedBroadcast(i, PERM_PRIVATE, null, null, Activity.RESULT_OK, null, null);
     }
 }
